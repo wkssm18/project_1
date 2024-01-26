@@ -1,10 +1,18 @@
 # project_1
 
+Porject_members:
+- Hyun Bin Shin (Project leader)
+- Joanne Laomoc
+- Amir Nizam
+
 
 
 ## Overview
 
-Individual investors often find it challenging to gauge the performance and risk associated with their portfolio of assets. This uncertainty can hinder their ability to make informed adjustments for improved performance and reduced risk of their portfolios. To address this, we have developed a set of Python functions designed to help individual investors with valuable insights into their portfolios. By using these tools, investors can gain a better understanding of their portfolio's performance, enabling them to make more informed decisions and optimize their investment strategies effectively.
+Individual investors often find it challenging to *gauge the performance and risk associated with their asset portfolio. <br>
+This uncertainty can hinder their ability to make informed decisions that can help improve the performance of their portfolio and reduce the risk. <br>
+To address this, we have developed and designed a set of python functions to help individual investors gain valuable insights into their portfolio. <br>
+By using these tools, investors are able to make more informed decisions to optimize their investment strategies. As well as, gain a better understanding of their portfolio performance. <br>
 
 ## List of functions
 
@@ -16,7 +24,7 @@ fetch_stock_data(start_date, end_date, tickers, timeframe = '1Day')
     - timeframe
 - Collects information about list of stocks and range of period to fetch historical stock price data
 - Alpaca API key and secret key are necessary in order to run this function. 
-- Make sure the Alpaca API key and secret key are saved in .env file, and they must be stored as variable named 'ALPACA_API_KEY' and 'ALPACA_SECRET_KEY'
+- Make sure the Alpaca API key and secret key are saved in .env file, and they must be stored as variables named 'ALPACA_API_KEY' and 'ALPACA_SECRET_KEY'
 
 portfolio_return(df, weight_list)
 - Parameters:
