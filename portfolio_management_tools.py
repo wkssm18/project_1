@@ -18,21 +18,22 @@ import datetime as dt
 
 
 def fetch_stock_data(start_date, end_date, tickers, timeframe = '1Day'):
+    # Grabbing all necessary alpaca information
     alpaca_api_key = os.getenv("ALPACA_API_KEY")
     alpaca_secret_key = os.getenv("ALPACA_SECRET_KEY")
-    
     api = REST(alpaca_api_key, alpaca_secret_key, base_url = 'https://paper-api.alpaca.markets')
     start_date_iso = pd.Timestamp(start_date, tz = 'America/New_York').isoformat()
     end_date_iso = pd.Timestamp(end_date, tz = 'America/New_York').isoformat()
-    
+    # Creating dataframe
     df_ticker = api.get_bars(tickers, TimeFrame.Day, start = start_date_iso, end = end_date_iso).df
+    # Selecting only close price data for each stock, and concatenating them into one dataframe
     dfs = {}
     for ticker in tickers:
         ticker_df = df_ticker.loc[df_ticker.symbol == ticker].drop('symbol', axis = 1)
         ticker_df = ticker_df['close']
         dfs[ticker] = ticker_df
     new_df = pd.concat(dfs.values(), axis = 1, keys = tickers)
-    
+    # Resetting index to have only date information
     new_df.reset_index(inplace = True)
     new_df.timestamp = new_df.timestamp.dt.date
     new_df.set_index('timestamp', inplace = True)
@@ -47,7 +48,7 @@ def weights(stock_list, nsim):
             lst = np.random.randint(1,100, len(stock_list))
             lst = [round(x / sum(lst),4) for x in lst]
         full_list.append(lst)
-
+    # If only has one set of weights, return a single list, not list of lists inside
     if nsim == 1:
         full_list = full_list[0]
     return full_list
@@ -197,43 +198,49 @@ def yearly_portfolio_info(df, weight_list):
     display(plot)
 
 def return_vs_risk_graph(df, nsims, my_weights, risk_free_return = 0, cal = False):
+    # Create nsims number of weight sets using weights function
     weight_list = weights(df.columns.tolist(), nsims)
     return_list = []
     std_dev_list = []
-
+    # For each weight set, calculate annual portfolio returns and risks, then append them to return_list and std_dev_list. Then put them together into one dataframe
     for i in weight_list:
         return_list.append(portfolio_return(df, i))
         std_dev_list.append(portfolio_risk(df, i))
     new_df = pd.DataFrame([return_list, std_dev_list], index = ['portfolio_return', 'portfolio_risk'])
+    # Change the dataframe's orientation and multiply by 100 to show values in percentages
     new_df = new_df.T * 100
+    # Calculate sharpe ratio
     new_df['sharpe_ratio'] = (new_df.portfolio_return - risk_free_return)/ new_df.portfolio_risk
     
+    # Find indexes of the safest portfolio and optimal risky portfolio
     safest_portfolio_index = new_df[new_df.portfolio_risk == new_df.portfolio_risk.min()].index[0]
     safest_portfolio_weights = weight_list[safest_portfolio_index]
-    best_portfolio_index = new_df[new_df.sharpe_ratio == new_df.sharpe_ratio.max()].index[0]
-    best_portfolio_weights = weight_list[best_portfolio_index]
-    
+    optimal_risky_portfolio_index = new_df[new_df.sharpe_ratio == new_df.sharpe_ratio.max()].index[0]
+    optimal_risky_portfolio_weights = weight_list[optimal_risky_portfolio_index]
+    # Print weight composition of your portfolio, optimal risky portfolio, and safest portfolio
     print(f'Your portfolio consists of: '),
     for i in range(df.shape[1]):
         print(f'{(my_weights[i] * 100):.2f}% of {df.columns[i]}'),
     print('-'*30)
-    print(f'Suggested portfolio consists of: '),
+    print(f'Optimal risky portfolio consists of: '),
     for i in range(df.shape[1]):
-        print(f'{(best_portfolio_weights[i] * 100):.2f}% of {df.columns[i]}'),
+        print(f'{(optimal_risky_portfolio_weights[i] * 100):.2f}% of {df.columns[i]}'),
     print('-'*30) 
     print(f'Safest portfolio consists of: '),
     for i in range(df.shape[1]):
         print(f'{(safest_portfolio_weights[i] * 100):.2f}% of {df.columns[i]}'),
     print('-'*30)
+    # Plot all the points on a scatter plot
     plt.figure(figsize = (10,7))
     plt.scatter(x = new_df.portfolio_risk, y = new_df.portfolio_return, s = 0.3, alpha = 0.5)
-    plt.scatter(x = portfolio_risk(df, safest_portfolio_weights) * 100, y = portfolio_return(df, safest_portfolio_weights) * 100, color = 'mediumseagreen', label = 'Safest point')
-    plt.scatter(x = portfolio_risk(df, best_portfolio_weights) * 100, y = portfolio_return(df, best_portfolio_weights) * 100, color = 'gold', label = 'Suggested point')
+    plt.scatter(x = portfolio_risk(df, safest_portfolio_weights) * 100, y = portfolio_return(df, safest_portfolio_weights) * 100, color = 'mediumseagreen', label = 'Safest portfolio point')
+    plt.scatter(x = portfolio_risk(df, optimal_risky_portfolio_weights) * 100, y = portfolio_return(df, optimal_risky_portfolio_weights) * 100, color = 'gold', label = 'Optimal risky portfolio point')
     plt.scatter(x = portfolio_risk(df, my_weights) * 100, y = portfolio_return(df, my_weights) * 100, color = 'k', label = 'Your portfolio', marker = '*')
     plt.xlabel('Risk (%)')
     plt.ylabel('Return (%)')
     plt.title('Return (%) vs. Risk (%)')
     plt.legend()
+    # If cal is True, return a capital allocation line using the risk free rate.
     if cal == True:
         a = new_df[new_df.sharpe_ratio == new_df.sharpe_ratio.max()].sharpe_ratio.item()
         x = np.arange(0,25)
@@ -242,4 +249,4 @@ def return_vs_risk_graph(df, nsims, my_weights, risk_free_return = 0, cal = Fals
         plt.xlim(0,30)
         plt.ylim(0,30)
        
-    return best_portfolio_weights
+    return optimal_risky_portfolio_weights
