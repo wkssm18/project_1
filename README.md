@@ -18,7 +18,7 @@ By using these functions we have created, investors can utilize the generated da
 ## List of functions
 
 
-**### Preparing necessary data** 
+** ### Preparing necessary data ** 
 
 #### 1. Retrieve stock price information
 
@@ -43,7 +43,7 @@ For simulation purposes this function randomly creates sets of generated weights
 
 
 
-**### Basic portfolio information**
+** ### Basic portfolio information **
 
 #### 3. Calculate annual portfolio return
 
@@ -77,7 +77,7 @@ Ex. portfolio return and risk for 2016, 2017, 2018
 
 
 
-**### Investment opportunity set**
+** ### Investment opportunity set **
 
 #### 6. Visualize The Efficient Frontier and Composition of The Safest, Optimal and Risky Portfolio
 
@@ -89,11 +89,12 @@ opportunity_set(df, my_weights, repeats, risk_free_return = 0, cal = False)
     - risk_free_return: Risk free rate. Used to calculate optimal risky portfolio
     - cal: Capital allocation line. If this is set as True, it will draw capital allocation line on the graph as well
 
-This function creates a scatter plot of portfolio returns vs risks, for a number of simulations. This plot visualizes the efficient frontier allowing the user to identify how their portfolio is doing. This graph also suggests the best composition for the safest portfolio and the optimal risky portfolio. This gives the user the ability to utilize the information given to re-evaluate their current portfolio. It also allows them to make their own informed decision to increase their profits or decrease their risk.
+This function creates a scatter plot of portfolio returns vs risks, for a number of simulations. This plot visualizes the efficient frontier allowing the user to identify how their portfolio is doing. This graph also suggests the best composition for the safest portfolio and the optimal risky portfolio. This gives the user the ability to utilize the information given to re-evaluate their current portfolio. It also allows them to make their own informed decision to increase their profits or decrease their risk. <br>
+This function returns a list of optimal risky portfolio weights
 
 
 
-**### Monte Carlo Simulation**
+** ### Monte Carlo Simulation **
 
 #### 7. Perform Monte Carlo Simulations
 
@@ -107,7 +108,8 @@ mc_sim(df, weight_list, timeframe, nsims, investment_amount = 1, kind = 'line')
     - kind: Type of display (has 3 kinds: 'line', 'kde', 'visualize_ci')
 
 
-This function performs a Monte Carlo simulation using the created dataframe and the given weights to run a simulation based on the portfolio return and risk. Once the function generates these datasets, it will display the information into 3 different kinds of graphs (line graph, KDE plot, and confidence interval display). This will help the individual have a better visual understanding of the possible outcomes of their investment.
+This function performs a Monte Carlo simulation using the created dataframe and the given weights to run a simulation based on the portfolio return and risk. Once the function generates these datasets, it will display the information into 3 different kinds of graphs (line graph, KDE plot, and confidence interval display). This will help the individual have a better visual understanding of the possible outcomes of their investment. <br>
+This function returns dataframe of simulations
 
 #### 8. Compare two different sets of portfolios by comparing their Monte Carlo simulation results 
 
