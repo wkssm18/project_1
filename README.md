@@ -18,7 +18,7 @@ By using these functions we have created, investors can utilize the generated da
 ## List of functions
 
 
-** ### Preparing necessary data ** 
+**### Preparing necessary data** 
 
 #### 1. Retrieve stock price information
 
@@ -43,7 +43,7 @@ For simulation purposes this function randomly creates sets of generated weights
 
 
 
-** ### Basic portfolio information **
+**### Basic portfolio information**
 
 #### 3. Calculate annual portfolio return
 
@@ -77,7 +77,7 @@ Ex. portfolio return and risk for 2016, 2017, 2018
 
 
 
-** ### Investment opportunity set **
+**### Investment opportunity set**
 
 #### 6. Visualize The Efficient Frontier and Composition of The Safest, Optimal and Risky Portfolio
 
@@ -94,7 +94,7 @@ This function returns a list of optimal risky portfolio weights
 
 
 
-** ### Monte Carlo Simulation **
+**### Monte Carlo Simulation**
 
 #### 7. Perform Monte Carlo Simulations
 
